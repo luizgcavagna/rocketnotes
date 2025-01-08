@@ -15,7 +15,7 @@ class UsersController {
 
       if(!password)
          throw new AppError('Password is required', 400);
-      
+
       const database = await sqliteConnection();
       const checkUserExists = await database.get('SELECT * FROM users WHERE email = (?)', [email])
 
@@ -26,11 +26,12 @@ class UsersController {
 
       await database.run('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, hashedPassword]);
 
-      response.send(`User ${name}, created successfully!`);
+      response.json(`User ${name, password}, created successfully!`);
+      //response.send(`User ${name}, created successfully!`);
    }
 
    async update(request, response) {
-      
+
       const { name, email, password, old_password } = request.body;
       const { id } = request.params;
 
@@ -48,10 +49,13 @@ class UsersController {
       user.name = name?? user.name;
       user.email = email?? user.email;
 
+      if(password && !old_password) 
+         throw new AppError('Old password is required');
+
       if(password && old_password) {
          const checkOldPassword = await compare(old_password, user.password);
 
-         if(checkOldPassword) 
+         if(!checkOldPassword) 
             throw new AppError('Old password does not match');
 
          user.password = await hash(password, 8);
