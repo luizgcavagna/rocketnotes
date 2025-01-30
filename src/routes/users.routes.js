@@ -1,10 +1,10 @@
 const { Router } = require('express');
-const UserController = require('../controllers/UserController');
+const UsersController = require('../controllers/UsersController');
 
 const usersRoutes = Router();
-const userController = new UserController();
+const usersController = new UsersController();
 
-usersRoutes.post('/create', userController.create);
-usersRoutes.put('/update/:id', userController.update);
+usersRoutes.post('/create', usersController.create);
+usersRoutes.put('/update/:id', usersController.update);
 
 module.exports = usersRoutes;
